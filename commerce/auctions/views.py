@@ -9,7 +9,7 @@ from django.contrib import messages
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings":Listing.objects.all()
+        "listings":Listing.objects.filter(winner="")
     })
 
 def categories(request):
@@ -54,11 +54,16 @@ def listing(request, list_id):
     winner = False
     if not listing.active:
         winner = request.user.username == listing.winner
+
+    if request.user.is_authenticated:
+        watchlist = request.user.watchlist.all()
+    else:
+        watchlist = None
     
     return render(request, "auctions/listing.html", {
         "listing":listing,
         "price":price,
-        "watchlist": request.user.watchlist.all(),
+        "watchlist": watchlist,
         "publisher":listing.publisher.all().first().username,
         "category": category,
         "bids":listing.bids.all(),
