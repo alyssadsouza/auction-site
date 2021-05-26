@@ -18,7 +18,7 @@ def categories(request):
     })
 
 def category(request, category):
-    listings = Listing.objects.filter(category=category)
+    listings = Listing.objects.filter(category=category, winner="")
     return render(request, "auctions/category.html", {"listings":listings})
 
 def comment(request, id):
